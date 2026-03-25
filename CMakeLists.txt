@@ -1,8 +1,15 @@
 # NOTES: current just for CMake-based IDE (e.g. CLion) indexing, the real compilation is done via JIT
 cmake_minimum_required(VERSION 3.10)
+set(CMAKE_CUDA_COMPILER "/usr/local/cuda/bin/nvcc")
+set(CMAKE_C_COMPILER $ENV{CONDA_PREFIX}/bin/gcc)
+set(CMAKE_CXX_COMPILER $ENV{CONDA_PREFIX}/bin/g++)
+set(CMAKE_CUDA_ARCHITECTURES "90a")
 project(deep_gemm LANGUAGES CXX CUDA)
 set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Define macro for CLion IDE to enable proper code indexing
+add_definitions(-D__CLION_IDE__)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -fPIC -Wno-psabi")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fPIC -Wno-psabi")
 set(CUDA_SEPARABLE_COMPILATION ON)
@@ -15,8 +22,8 @@ set(CUDA_ARCH_LIST "9.0" CACHE STRING "List of CUDA architectures to compile")
 set(TORCH_CUDA_ARCH_LIST "${CUDA_ARCH_LIST}")
 
 find_package(CUDAToolkit REQUIRED)
-find_package(pybind11 REQUIRED)
-find_package(Torch REQUIRED)
+find_package(pybind11 REQUIRED PATHS "/home/tangpanyu/miniconda3/lib/python3.12/site-packages/pybind11/share/cmake/pybind11")
+find_package(Torch REQUIRED PATHS "/home/tangpanyu/miniconda3/lib/python3.12/site-packages/torch/share/cmake/Torch")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CUDA_STANDARD 17)
